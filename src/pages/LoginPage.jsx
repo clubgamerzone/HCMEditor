@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, FacebookAuthProvider, signOut } from "firebase/auth";
 import { auth } from "../firebase";
+
+const facebookProvider = new FacebookAuthProvider();
 
 const ALLOWED_EMAIL = "josel.demoya@gmail.com";
 
@@ -9,6 +11,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fbLoading, setFbLoading] = useState(false);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -26,6 +29,25 @@ export default function LoginPage() {
       setError("Invalid credentials. Please try again.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleFacebookLogin() {
+    setError("");
+    setFbLoading(true);
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      const userEmail = result.user.email?.toLowerCase();
+      if (userEmail !== ALLOWED_EMAIL) {
+        await signOut(auth);
+        setError("Access denied. This Facebook account is not authorized.");
+      }
+    } catch (err) {
+      if (err.code !== "auth/popup-closed-by-user") {
+        setError("Facebook sign-in failed. Please try again.");
+      }
+    } finally {
+      setFbLoading(false);
     }
   }
 
@@ -60,6 +82,14 @@ export default function LoginPage() {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
+        <div className="divider"><span>or</span></div>
+        <button
+          className="facebook-btn"
+          onClick={handleFacebookLogin}
+          disabled={fbLoading}
+        >
+          {fbLoading ? "Connecting..." : "Continue with Facebook"}
+        </button>
       </div>
     </div>
   );
