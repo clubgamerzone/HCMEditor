@@ -276,6 +276,23 @@
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.enemy-card-header:hover {
+  background: #282828;
+}
+
+.enemy-card-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-chevron {
+  font-size: 0.6rem;
+  color: #555;
 }
 
 .enemy-card-header-top h3 {
@@ -387,6 +404,7 @@
 }
 
 .field-textarea {
+  width: 100%;
   resize: vertical;
   font-family: inherit;
   line-height: 1.4;
@@ -492,6 +510,69 @@
 }
 
 .enemy-card-footer button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Collapsed quick-edit */
+.card-collapsed {
+  padding: 0.65rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.collapsed-field {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.collapsed-field label {
+  font-size: 0.75rem;
+  color: #888;
+  white-space: nowrap;
+}
+
+.collapsed-field input {
+  width: 70px;
+  padding: 0.25rem 0.4rem;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+}
+
+.collapsed-field input:focus {
+  outline: none;
+  border-color: #e53e3e;
+}
+
+.collapsed-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.collapsed-footer button {
+  padding: 0.3rem 0.75rem;
+  background: #e53e3e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: background 0.2s;
+}
+
+.collapsed-footer button:hover:not(:disabled) {
+  background: #c53030;
+}
+
+.collapsed-footer button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }

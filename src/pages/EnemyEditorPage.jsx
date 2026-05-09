@@ -20,7 +20,7 @@ export default function EnemyEditorPage() {
     return () => unsubscribe();
   }, []);
 
-  const categoryNames = Object.keys(categories).filter((c) => c !== "Default");
+  const categoryNames = Object.keys(categories);
   const displayCategories = activeCategory ? [activeCategory] : categoryNames;
 
   function getFilteredEnemies(categoryName) {

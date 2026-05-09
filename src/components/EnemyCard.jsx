@@ -133,6 +133,7 @@ export default function EnemyCard({ categoryName, enemyName, stats, dbPath, enem
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
+  const [expanded, setExpanded] = useState(false);
 
   function handleChange(field, value) {
     setValues((prev) => ({ ...prev, [field]: value }));
@@ -215,12 +216,13 @@ export default function EnemyCard({ categoryName, enemyName, stats, dbPath, enem
   }
 
   return (
-    <div className="enemy-card">
-      <div className="enemy-card-header">
+    <div className={`enemy-card ${expanded ? "enemy-card--expanded" : ""}`}>
+      <div className="enemy-card-header" onClick={() => setExpanded((v) => !v)}>
         <div className="enemy-card-header-top">
           <h3>{enemyName}</h3>
+          <span className="card-chevron">{expanded ? "▲" : "▼"}</span>
         </div>
-        <div className="enemy-card-header-bottom">
+        <div className="enemy-card-header-bottom" onClick={(e) => e.stopPropagation()}>
           <label className="category-label">Category</label>
           <select
             className="category-select"
@@ -233,45 +235,72 @@ export default function EnemyCard({ categoryName, enemyName, stats, dbPath, enem
           </select>
         </div>
       </div>
-      <div className="enemy-fields">
-        {(() => {
-          const sectionedFields = SECTIONS.flatMap((s) => s.fields);
-          const remainderFields = Object.keys(values).filter((f) => !sectionedFields.includes(f));
-          const allSections = [
-            ...SECTIONS,
-            ...(remainderFields.length > 0 ? [{ label: "Other", fields: remainderFields }] : []),
-          ];
 
-          return allSections.map((section) => {
-            const present = section.fields.filter((f) => f in values);
-            if (present.length === 0) return null;
-            return (
-              <div className="field-section" key={section.label ?? "__top"}>
-                {section.label && <div className="field-section-label">{section.label}</div>}
-                {present.map((field) => (
-                  <div className="enemy-field-row" key={field}>
-                    {field === "lootDrops" ? (
-                      renderField(field, values[field])
-                    ) : (
-                      <div className="enemy-field">
-                        <label>{field}</label>
-                        {renderField(field, values[field])}
+      {/* Collapsed quick-edit row */}
+      {!expanded && (
+        <div className="card-collapsed">
+          <div className="collapsed-field">
+            <label>HP</label>
+            <input type="number" value={values.healthPoints ?? ""} onChange={(e) => handleChange("healthPoints", Number(e.target.value))} />
+          </div>
+          <div className="collapsed-field">
+            <label>EXP</label>
+            <input type="number" value={values.experienceToGive ?? ""} onChange={(e) => handleChange("experienceToGive", Number(e.target.value))} />
+          </div>
+          {error && <p className="error">{error}</p>}
+          <div className="collapsed-footer">
+            {saved && <span className="saved-badge">Saved!</span>}
+            <button onClick={handleSave} disabled={saving}>
+              {saving ? "Saving..." : "Save"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Expanded full editor */}
+      {expanded && (
+        <>
+          <div className="enemy-fields">
+            {(() => {
+              const sectionedFields = SECTIONS.flatMap((s) => s.fields);
+              const remainderFields = Object.keys(values).filter((f) => !sectionedFields.includes(f));
+              const allSections = [
+                ...SECTIONS,
+                ...(remainderFields.length > 0 ? [{ label: "Other", fields: remainderFields }] : []),
+              ];
+
+              return allSections.map((section) => {
+                const present = section.fields.filter((f) => f in values);
+                if (present.length === 0) return null;
+                return (
+                  <div className="field-section" key={section.label ?? "__top"}>
+                    {section.label && <div className="field-section-label">{section.label}</div>}
+                    {present.map((field) => (
+                      <div className="enemy-field-row" key={field}>
+                        {field === "lootDrops" ? (
+                          renderField(field, values[field])
+                        ) : (
+                          <div className="enemy-field">
+                            <label>{field}</label>
+                            {renderField(field, values[field])}
+                          </div>
+                        )}
                       </div>
-                    )}
+                    ))}
                   </div>
-                ))}
-              </div>
-            );
-          });
-        })()}
-      </div>
-      {error && <p className="error">{error}</p>}
-      <div className="enemy-card-footer">
-        {saved && <span className="saved-badge">Saved!</span>}
-        <button onClick={handleSave} disabled={saving}>
-          {saving ? "Saving..." : "Save Changes"}
-        </button>
-      </div>
+                );
+              });
+            })()}
+          </div>
+          {error && <p className="error" style={{padding: "0 1rem"}}>{error}</p>}
+          <div className="enemy-card-footer">
+            {saved && <span className="saved-badge">Saved!</span>}
+            <button onClick={handleSave} disabled={saving}>
+              {saving ? "Saving..." : "Save Changes"}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
