@@ -11,7 +11,32 @@ const LOOT_DROP_FIELDS = {
   minAmount: "number",
 };
 
-const FIELD_TYPES = {
+const SECTIONS = [
+  {
+    label: null,
+    fields: ["enemyName", "description"],
+  },
+  {
+    label: "Enemy Settings",
+    fields: ["healthPoints", "experienceToGive"],
+  },
+  {
+    label: "Movement Settings",
+    fields: ["speed", "timeToWait"],
+  },
+  {
+    label: "Attack Settings",
+    fields: ["damageToGive", "detectionRadius", "defense", "knockbackForceX", "knockbackForceY", "pursuitMultiplier"],
+  },
+  {
+    label: "Respawn Settings",
+    fields: ["shouldRespawn", "timeToReset", "timeToRespawn"],
+  },
+  {
+    label: "Loot Settings",
+    fields: ["lootDrops"],
+  },
+];
   behaviorType: "text",
   damageToGive: "number",
   defense: "number",
@@ -196,18 +221,36 @@ export default function EnemyCard({ categoryName, enemyName, stats, dbPath, enem
         </div>
       </div>
       <div className="enemy-fields">
-        {Object.entries(values).map(([field, value]) => (
-          <div className="enemy-field-row" key={field}>
-            {field === "lootDrops" ? (
-              renderField(field, value)
-            ) : (
-              <div className="enemy-field">
-                <label>{field}</label>
-                {renderField(field, value)}
+        {(() => {
+          const sectionedFields = SECTIONS.flatMap((s) => s.fields);
+          const remainderFields = Object.keys(values).filter((f) => !sectionedFields.includes(f));
+          const allSections = [
+            ...SECTIONS,
+            ...(remainderFields.length > 0 ? [{ label: "Other", fields: remainderFields }] : []),
+          ];
+
+          return allSections.map((section) => {
+            const present = section.fields.filter((f) => f in values);
+            if (present.length === 0) return null;
+            return (
+              <div className="field-section" key={section.label ?? "__top"}>
+                {section.label && <div className="field-section-label">{section.label}</div>}
+                {present.map((field) => (
+                  <div className="enemy-field-row" key={field}>
+                    {field === "lootDrops" ? (
+                      renderField(field, values[field])
+                    ) : (
+                      <div className="enemy-field">
+                        <label>{field}</label>
+                        {renderField(field, values[field])}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
-        ))}
+            );
+          });
+        })()}
       </div>
       {error && <p className="error">{error}</p>}
       <div className="enemy-card-footer">
