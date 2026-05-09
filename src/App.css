@@ -1,0 +1,303 @@
+/* ===== Hell Cemetery Enemy Editor Styles ===== */
+
+/* Login */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d0d0d;
+}
+
+.login-card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-card h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: #e53e3e;
+  text-align: center;
+}
+
+.login-card h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: #888;
+  text-align: center;
+  font-weight: 400;
+}
+
+.login-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.field input {
+  padding: 0.5rem 0.75rem;
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: #e53e3e;
+}
+
+.login-card button {
+  margin-top: 0.5rem;
+  padding: 0.65rem;
+  background: #e53e3e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.login-card button:hover:not(:disabled) {
+  background: #c53030;
+}
+
+.login-card button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #fc8181;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Editor Layout */
+.editor-layout {
+  min-height: 100vh;
+  background: #0d0d0d;
+  color: #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+.editor-header h1 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #e53e3e;
+}
+
+.logout-btn {
+  padding: 0.4rem 1rem;
+  background: transparent;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  border-color: #e53e3e;
+  color: #e53e3e;
+}
+
+.editor-controls {
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #141414;
+  border-bottom: 1px solid #222;
+}
+
+.search-input {
+  padding: 0.5rem 0.75rem;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.95rem;
+  max-width: 320px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #e53e3e;
+}
+
+.category-tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 0.35rem 0.9rem;
+  background: transparent;
+  border: 1px solid #444;
+  border-radius: 20px;
+  color: #888;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  border-color: #e53e3e;
+  color: #e53e3e;
+}
+
+.tab.active {
+  background: #e53e3e;
+  border-color: #e53e3e;
+  color: #fff;
+}
+
+.enemy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+  padding: 1.5rem;
+}
+
+/* Enemy Card */
+.enemy-card {
+  background: #1a1a1a;
+  border: 1px solid #2d2d2d;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.enemy-card-header {
+  padding: 0.75rem 1rem;
+  background: #222;
+  border-bottom: 1px solid #333;
+}
+
+.enemy-category {
+  font-size: 0.7rem;
+  color: #e53e3e;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.enemy-card-header h3 {
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+  color: #f0f0f0;
+}
+
+.enemy-fields {
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.enemy-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.enemy-field label {
+  flex: 0 0 160px;
+  font-size: 0.78rem;
+  color: #888;
+}
+
+.enemy-field input,
+.enemy-field select {
+  flex: 1;
+  padding: 0.3rem 0.5rem;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+  min-width: 0;
+}
+
+.enemy-field input:focus,
+.enemy-field select:focus {
+  outline: none;
+  border-color: #e53e3e;
+}
+
+.enemy-card-footer {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #2d2d2d;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.saved-badge {
+  font-size: 0.82rem;
+  color: #68d391;
+}
+
+.enemy-card-footer button {
+  padding: 0.4rem 1rem;
+  background: #e53e3e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.enemy-card-footer button:hover:not(:disabled) {
+  background: #c53030;
+}
+
+.enemy-card-footer button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #888;
+}
+
