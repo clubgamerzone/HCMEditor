@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ref, set } from "firebase/database";
+import { ref, set, remove } from "firebase/database";
 import { db } from "../firebase";
 
 const LOOT_DROP_FIELDS = {
@@ -34,6 +34,7 @@ const FIELD_TYPES = {
 };
 
 function LootDropEditor({ drops, onChange }) {
+  const [open, setOpen] = useState(false);
   const list = Array.isArray(drops) ? drops : Object.values(drops ?? {});
 
   function updateDrop(index, subField, value) {
@@ -74,24 +75,34 @@ function LootDropEditor({ drops, onChange }) {
   }
 
   return (
-    <div className="loot-drops">
-      {list.map((drop, index) => (
-        <div className="loot-drop-entry" key={index}>
-          <div className="loot-drop-title">Drop #{index + 1} — {drop.itemName ?? "?"}</div>
-          {Object.entries(LOOT_DROP_FIELDS).map(([subField, type]) => (
-            <div className="enemy-field loot-subfield" key={subField}>
-              <label>{subField}</label>
-              {renderSubField(index, subField, drop[subField], type)}
+    <div className="loot-section">
+      <button className="loot-toggle" type="button" onClick={() => setOpen((o) => !o)}>
+        <span>lootDrops</span>
+        <span className="loot-count">{list.length} drop{list.length !== 1 ? "s" : ""}</span>
+        <span className="loot-chevron">{open ? "▲" : "▼"}</span>
+      </button>
+      {open && (
+        <div className="loot-drops">
+          {list.map((drop, index) => (
+            <div className="loot-drop-entry" key={index}>
+              <div className="loot-drop-title">Drop #{index + 1} — {drop.itemName ?? "?"}</div>
+              {Object.entries(LOOT_DROP_FIELDS).map(([subField, type]) => (
+                <div className="enemy-field loot-subfield" key={subField}>
+                  <label>{subField}</label>
+                  {renderSubField(index, subField, drop[subField], type)}
+                </div>
+              ))}
             </div>
           ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }
 
-export default function EnemyCard({ categoryName, enemyName, stats, dbPath }) {
+export default function EnemyCard({ categoryName, enemyName, stats, dbPath, enemyNodePath, allCategories }) {
   const [values, setValues] = useState({ ...stats });
+  const [selectedCategory, setSelectedCategory] = useState(categoryName);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
@@ -106,7 +117,14 @@ export default function EnemyCard({ categoryName, enemyName, stats, dbPath }) {
     setError("");
     setSaved(false);
     try {
-      await set(ref(db, dbPath), values);
+      if (selectedCategory !== categoryName) {
+        // Move enemy to new category: write to new path, delete old node
+        const newStatsPath = `EnemySettings/Categories/${selectedCategory}/${enemyName}/enemyStats`;
+        await set(ref(db, newStatsPath), values);
+        await remove(ref(db, enemyNodePath));
+      } else {
+        await set(ref(db, dbPath), values);
+      }
       setSaved(true);
     } catch (err) {
       setError("Failed to save: " + err.message);
@@ -161,17 +179,27 @@ export default function EnemyCard({ categoryName, enemyName, stats, dbPath }) {
   return (
     <div className="enemy-card">
       <div className="enemy-card-header">
-        <span className="enemy-category">{categoryName}</span>
-        <h3>{enemyName}</h3>
+        <div className="enemy-card-header-top">
+          <h3>{enemyName}</h3>
+        </div>
+        <div className="enemy-card-header-bottom">
+          <label className="category-label">Category</label>
+          <select
+            className="category-select"
+            value={selectedCategory}
+            onChange={(e) => { setSelectedCategory(e.target.value); setSaved(false); }}
+          >
+            {(allCategories ?? [categoryName]).map((cat) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="enemy-fields">
         {Object.entries(values).map(([field, value]) => (
-          <div className={`enemy-field-row ${field === "lootDrops" ? "loot-row" : ""}`} key={field}>
+          <div className="enemy-field-row" key={field}>
             {field === "lootDrops" ? (
-              <>
-                <div className="loot-label">lootDrops</div>
-                {renderField(field, value)}
-              </>
+              renderField(field, value)
             ) : (
               <div className="enemy-field">
                 <label>{field}</label>

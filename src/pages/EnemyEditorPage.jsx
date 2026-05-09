@@ -78,6 +78,8 @@ export default function EnemyEditorPage() {
                 enemyName={enemyName}
                 stats={enemyData.enemyStats ?? enemyData}
                 dbPath={`EnemySettings/Categories/${categoryName}/${enemyName}/enemyStats`}
+                enemyNodePath={`EnemySettings/Categories/${categoryName}/${enemyName}`}
+                allCategories={categoryNames}
               />
             ))
           )}
