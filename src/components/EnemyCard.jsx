@@ -37,6 +37,8 @@ const SECTIONS = [
     fields: ["lootDrops"],
   },
 ];
+
+const FIELD_TYPES = {
   behaviorType: "text",
   damageToGive: "number",
   defense: "number",
@@ -160,6 +162,17 @@ export default function EnemyCard({ categoryName, enemyName, stats, dbPath, enem
 
   function renderField(field, value) {
     const type = FIELD_TYPES[field] ?? (typeof value === "boolean" ? "boolean" : typeof value === "number" ? "number" : "text");
+
+    if (field === "description") {
+      return (
+        <textarea
+          className="field-textarea"
+          value={value ?? ""}
+          onChange={(e) => handleChange(field, e.target.value)}
+          rows={3}
+        />
+      );
+    }
 
     if (type === "loot") {
       return (
