@@ -36,6 +36,34 @@
   font-weight: 400;
 }
 
+.mode-tabs {
+  display: flex;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+
+.mode-tab {
+  flex: 1;
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.mode-tab:hover {
+  color: #fff;
+}
+
+.mode-tab.active {
+  background: #e53e3e;
+  color: #fff;
+}
+
 .login-card form {
   display: flex;
   flex-direction: column;
